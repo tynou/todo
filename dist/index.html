@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        
+        <script src="https://kit.fontawesome.com/43bc06e558.js" crossorigin="anonymous"></script>
+        
+        <title>Todo List</title>
+    <script defer src="bundle.js"></script></head>
+    <body>
+        <div id="blur-overlay"><div class="tutturu"></div></div>
+
+        <div id="modal">
+            <div id="close-modal" class="icon"><i class="fa-solid fa-xmark"></i></div>
+
+            <div id="popup-options" class="disabled">
+                <p class="title">Type</p>
+
+                <div class="options">
+                    <div id="todo" class="option chosen">
+                        <div class="icon"><i class="fa-solid fa-circle"></i></div>
+                        <p class="option-name">Todo</p>
+                    </div>
+    
+                    <div id="list" class="option">
+                        <div class="icon"><i class="fa-solid fa-circle"></i></div>
+                        <p class="option-name">List</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="popup-window">
+                <div class="input-block">
+                    <p>Title:</p>
+                    <textarea class="text-edit" id="modal-title" placeholder="title here" maxlength="40"></textarea>
+                </div>
+                <div class="input-block">
+                    <p>Description:</p>
+                    <textarea class="text-edit" id="modal-desc" placeholder="description here"></textarea>
+                </div>
+                <div class="input-block">
+                    <p>Due Date:</p>
+                    <input type="date" id="modal-date">
+                </div>
+                <button id="modal-submit">Edit</button>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="sidebar">
+                <div class="categories">
+                    <div id="all" class="category chosen">
+                        <div class="icon"><i class="fa-solid fa-house"></i></div>
+                        <p class="category-name">All</p>
+                    </div>
+
+                    <div id="today" class="category">
+                        <div class="icon"><i class="fa-solid fa-star"></i></div>
+                        <p class="category-name">Today</p>
+                    </div>
+
+                    <div id="week" class="category">
+                        <div class="icon"><i class="fa-solid fa-calendar-week"></i></div>
+                        <p class="category-name">This Week</p>
+                    </div>
+                </div>
+
+                <div class="my-lists">
+                    <p class="title">My Lists</p>
+
+                    <div class="lists">
+                        <div class="list">
+                            <div class="icon"><i class="fa-solid fa-paperclip"></i></div>
+                            <p class="list-name">Template List 1</p>
+                        </div>
+
+                        <div class="list">
+                            <div class="icon"><i class="fa-solid fa-paperclip"></i></div>
+                            <p class="list-name">Template List 2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="new-entry">
+                    <div class="icon"><i class="fa-solid fa-plus"></i></div>
+                    <p>New Entry</p>
+                </button>
+            </div>
+
+            <div class="main">
+                <div class="todo">
+                    <div class="done"></div>
+                    <p class="name">Template</p>
+                    <p class="due">Feb 31st</p>
+                    <div class="icon btn"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <div class="icon btn"><i class="fa-solid fa-trash"></i></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
