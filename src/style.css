@@ -376,6 +376,30 @@ body {
     outline: none;
 }
 
+.date-edit {
+    border: none;
+    padding: 0.25rem;
+    outline: none;
+    transition: 200ms;
+}
+
+input, textarea {
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.date-edit:focus {
+    box-shadow: inset 0px 0px 4px 2px var(--light-blue);
+}
+
+#modal-title {
+    height: 1.75rem;
+}
+
+#modal-desc {
+    height: 5rem;
+}
+
 #modal-submit {
     cursor: pointer;
     border: none;
@@ -390,6 +414,32 @@ body {
 #modal-submit:hover {
     box-shadow: inset 0px 0px 4px 0px var(--green);
 }
+
+.input-block {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.input-block.error > textarea {
+    outline: 1px solid var(--red);
+}
+
+.error-text {
+    color: var(--red);
+    font-size: 0.75rem;
+    transform: scale(0);
+    opacity: 0;
+    transition: 200ms;
+    height: 0;
+}
+
+.error-text.enabled {
+    height: 100%;
+    transform: scale(1);
+    opacity: 1;
+}
+
 
 
 ::-webkit-scrollbar {

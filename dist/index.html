@@ -38,6 +38,7 @@
                 <div class="input-block">
                     <p>Title:</p>
                     <textarea class="text-edit" id="modal-title" placeholder="title here" maxlength="40"></textarea>
+                    <div class="error-text"></div>
                 </div>
                 <div class="input-block">
                     <p>Description:</p>
@@ -45,9 +46,12 @@
                 </div>
                 <div class="input-block">
                     <p>Due Date:</p>
-                    <input type="date" id="modal-date">
+                    <input class="date-edit" type="date" id="modal-date">
                 </div>
-                <button id="modal-submit">Edit</button>
+                <div class="input-block">
+                    <button id="modal-submit">Edit</button>
+                    <div class="error-text"></div>
+                </div>
             </div>
         </div>
 

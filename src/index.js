@@ -225,19 +225,32 @@ const openModal = (params) => {
     blurOverlay.classList.add("active");
     modal.classList.add("active");
 
+    modalTitle.value = "";
+    modalDesc.value = "";
+    modalDate.value = "";
+
     switch (params.type) {
         case "new-entry":
             createOptions.classList.remove("disabled");
             changeModal("todo");
 
             modalSubmit.onclick = () => {
+                if (modalTitle.value === "") {
+                    displayError(modalTitle.parentNode, "the title must not be empty");
+                    return;
+                }
+                if (chosen.type === "category" && entry === "todo") {
+                    displayError(modalSubmit.parentNode, "select a list first");
+                    return;
+                }
+                if (entry === "list" && todos.hasOwnProperty(modalTitle.value)) {
+                    displayError(modalTitle.parentNode, "a list with that name already exists");
+                    return;
+                }
+
                 switch (entry) {
                     case "todo":
-                        if (chosen.type === "category") {
-                            console.log("whoopsie");
-                        } else {
-                            addTodo(chosen.listName, modalTitle.value, modalDate.value ? new Date(modalDate.value) : new Date());
-                        }
+                        addTodo(chosen.listName, modalTitle.value, modalDate.value ? new Date(modalDate.value) : new Date());
                         break;
                     case "list":
                         addList(modalTitle.value)
@@ -259,6 +272,11 @@ const openModal = (params) => {
             modalDate.value = format(params.obj.due, "yyyy-MM-dd");
 
             modalSubmit.onclick = () => {
+                if (modalTitle.value === "") {
+                    displayError(modalTitle.parentNode, "the title must not be empty");
+                    return;
+                }
+
                 params.obj.name = modalTitle.value;
                 params.obj.description = modalDesc.value;
                 params.obj.due = new Date(modalDate.value).setHours(0,0,0,0);
@@ -276,6 +294,24 @@ const closeModal = () => {
     modal.classList.remove("active");
 
     modalSubmit.onclick = undefined;
+}
+
+const displayError = (inputBlock, errorText) => {
+    const error = inputBlock.querySelector(".error-text");
+
+    inputBlock.classList.add("error");
+    error.classList.add("enabled");
+
+    error.innerHTML = errorText;
+
+    sleep(2000).then(() => {
+        inputBlock.classList.remove("error");
+        error.classList.remove("enabled");
+    });
+}
+
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
