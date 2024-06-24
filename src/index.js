@@ -7,6 +7,8 @@ const newEntry = document.querySelector(".new-entry");
 const todoContainer = document.querySelector(".main");
 const listContainer = document.querySelector(".lists");
 
+const deleteList = document.querySelector("#delete-list");
+
 const blurOverlay = document.querySelector("#blur-overlay");
 const modal = document.querySelector("#modal");
 
@@ -87,7 +89,16 @@ const renderTodos = () => {
             break;
     }
 
-    todoContainer.innerHTML = "";
+    document.querySelectorAll(".todo").forEach(element => {
+        element.remove();
+    });
+
+    deleteList.classList.add("disabled");
+    if (list.length === 0 && chosen.type !== "category") {
+        deleteList.classList.remove("disabled");
+
+        return;
+    }
 
     list.forEach((todo) => {
         const newTodo = document.createElement("div");
@@ -335,15 +346,24 @@ newEntry.addEventListener("click", () => {
 
 close.addEventListener("click", closeModal);
 
+deleteList.addEventListener("click", () => {
+    delete todos[chosen.listName];
 
-addList("test");
-addList("boom yo");
+    renderListNames();
 
-addTodo("test", "bimbo", new Date());
-addTodo("test", "adihtsdgsds", new Date(2024, 5, 24));
-addTodo("test", "a", new Date(2024, 5, 16));
-addTodo("test", "b", new Date(2024, 5, 17));
-addTodo("test", "c", new Date(2024, 5, 23));
+    changeChosen({type: "category", category: "all", element: categories[0]});
+    renderTodos();
+});
+
+
+addList("folder");
+addList("top secret");
+
+addTodo("folder", "tutturu", new Date());
+addTodo("folder", "adihtsdgsds", new Date(2024, 5, 24));
+addTodo("folder", "watch steins;gate", new Date(2024, 5, 16));
+addTodo("top secret", "hack to the gate", new Date(2024, 5, 17));
+addTodo("top secret", "send a d-mail", new Date(2024, 5, 23));
 
 renderTodos();
 renderListNames();
