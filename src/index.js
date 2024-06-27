@@ -1,13 +1,15 @@
 import {format, isWithinInterval, startOfWeek, endOfWeek} from "date-fns";
 import './style.css';
 
+const sidebar = document.querySelector(".sidebar");
+
 const categories = document.querySelectorAll(".category");
-const newEntry = document.querySelector(".new-entry");
+const newEntryBtn = document.querySelector("#new-entry");
 
 const todoContainer = document.querySelector(".main");
 const listContainer = document.querySelector(".lists");
 
-const deleteList = document.querySelector("#delete-list");
+const deleteListBtn = document.querySelector("#delete-list");
 
 const blurOverlay = document.querySelector("#blur-overlay");
 const modal = document.querySelector("#modal");
@@ -21,21 +23,40 @@ const modalDesc = document.querySelector("#modal-desc");
 const modalDate = document.querySelector("#modal-date");
 const modalSubmit = document.querySelector("#modal-submit");
 
-const close = document.querySelector("#close-modal");
+const closeModalBtn = document.querySelector("#close-modal");
 
-const todos = {};
+const openSidebarBtn = document.querySelector("#open-sidebar");
+
+const loadData = true;
+const todos = loadData ? JSON.parse(localStorage.getItem("todos")) || {} : {};
 
 let chosen = {type: "category", category: "all", element: categories[0]};
 let entry = "todo";
+let sidebarOpen = false;
 
 
 
-const addTodo = (listName, todoName, date) => {
+const isEmpty = (obj) => {
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+}
+
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const save = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+};
+
+const addTodo = (listName, todoName, description, date) => {
     if (!todos.hasOwnProperty(listName)) { return }
 
     const todo = {
         name: todoName,
-        description: "",
+        description: description,
         due: date ? date.setHours(0,0,0,0) : new Date().setHours(0,0,0,0),
         list: listName,
         done: false,
@@ -44,12 +65,35 @@ const addTodo = (listName, todoName, date) => {
     todos[listName].push(todo);
 
     todos[listName].sort((a, b) => b.due - a.due);
+
+    save();
 };
 
 const addList = (listName) => {
     if (todos.hasOwnProperty(listName)) { return }
 
     todos[listName] = [];
+
+    save();
+};
+
+const deleteTodo = (list, index) => {
+    list.splice(index, 1);
+
+    renderTodos();
+
+    save();
+};
+
+const deleteList = () => {
+    delete todos[chosen.listName];
+
+    renderListNames();
+
+    changeChosen({type: "category", category: "all", element: categories[0]});
+    renderTodos();
+
+    save();
 };
 
 const getCategoryTodos = (category) => {
@@ -76,7 +120,7 @@ const getCategoryTodos = (category) => {
     list.sort((a, b) => b.due - a.due);
 
     return list;
-}
+};
 
 const renderTodos = () => {
     let list;
@@ -93,9 +137,9 @@ const renderTodos = () => {
         element.remove();
     });
 
-    deleteList.classList.add("disabled");
+    deleteListBtn.classList.add("disabled");
     if (list.length === 0 && chosen.type !== "category") {
-        deleteList.classList.remove("disabled");
+        deleteListBtn.classList.remove("disabled");
 
         return;
     }
@@ -142,9 +186,7 @@ const renderTodos = () => {
         });
 
         remove.addEventListener("click", () => {
-            todos[todo.list].splice(todos[todo.list].indexOf(todo), 1);
-
-            renderTodos();
+            deleteTodo(todos[todo.list], todos[todo.list].indexOf(todo));
         });
 
         edit.addEventListener("click", () => {
@@ -188,7 +230,7 @@ const changeChosen = (newChosen) => {
     newChosen.element.classList.add("chosen");
 
     chosen = newChosen;
-}
+};
 
 const changeModal = (newEntry) => {
     if (entry === "todo" || entry === "list") { document.querySelector(`#${entry}`).classList.remove("chosen") }
@@ -230,7 +272,7 @@ const changeModal = (newEntry) => {
             modalSubmit.classList.add("disabled");
             break;
     }
-}
+};
 
 const openModal = (params) => {
     blurOverlay.classList.add("active");
@@ -261,7 +303,7 @@ const openModal = (params) => {
 
                 switch (entry) {
                     case "todo":
-                        addTodo(chosen.listName, modalTitle.value, modalDate.value ? new Date(modalDate.value) : new Date());
+                        addTodo(chosen.listName, modalTitle.value, modalDesc.value, modalDate.value ? new Date(modalDate.value) : new Date());
                         break;
                     case "list":
                         addList(modalTitle.value)
@@ -298,14 +340,14 @@ const openModal = (params) => {
             }
             break;
     }
-}
+};
 
 const closeModal = () => {
     blurOverlay.classList.remove("active");
     modal.classList.remove("active");
 
     modalSubmit.onclick = undefined;
-}
+};
 
 const displayError = (inputBlock, errorText) => {
     const error = inputBlock.querySelector(".error-text");
@@ -319,11 +361,7 @@ const displayError = (inputBlock, errorText) => {
         inputBlock.classList.remove("error");
         error.classList.remove("enabled");
     });
-}
-
-const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+};
 
 
 
@@ -340,30 +378,39 @@ options.forEach((opt) => {
     });
 })
 
-newEntry.addEventListener("click", () => {
+newEntryBtn.addEventListener("click", () => {
     openModal({type: "new-entry"});
 });
 
-close.addEventListener("click", closeModal);
+closeModalBtn.addEventListener("click", closeModal);
 
-deleteList.addEventListener("click", () => {
-    delete todos[chosen.listName];
+deleteListBtn.addEventListener("click", deleteList);
 
-    renderListNames();
+openSidebarBtn.addEventListener("click", () => {
+    sidebarOpen = !sidebarOpen;
+    sidebar.classList.toggle("closed");
+    openSidebarBtn.classList.toggle("closed");
 
-    changeChosen({type: "category", category: "all", element: categories[0]});
-    renderTodos();
+    const icon = openSidebarBtn.querySelector(".icon > i");
+    if (sidebarOpen) {
+        icon.classList = "fa-solid fa-xmark";
+    } else {
+        icon.classList = "fa-solid fa-bars";
+    }
 });
 
 
-addList("folder");
-addList("top secret");
-
-addTodo("folder", "tutturu", new Date());
-addTodo("folder", "adihtsdgsds", new Date(2024, 5, 24));
-addTodo("folder", "watch steins;gate", new Date(2024, 5, 16));
-addTodo("top secret", "hack to the gate", new Date(2024, 5, 17));
-addTodo("top secret", "send a d-mail", new Date(2024, 5, 23));
+if (isEmpty(todos)) {
+    addList("folder");
+    addList("top secret");
+    
+    addTodo("folder", "tutturu", "my watch isn't working.. ;(", new Date());
+    addTodo("folder", "adihtsdgsds", "dfgdfg", new Date(2024, 5, 24));
+    addTodo("folder", "watch steins;gate", "i heard it's good", new Date(2024, 5, 16));
+    addTodo("top secret", "hack to the gate", "no desc", new Date(2024, 5, 17));
+    addTodo("top secret", "send a d-mail", "using the Phone Microwave (name subject to change)", new Date(2024, 5, 23));
+    addTodo("top secret", "save Makise Kurisu", "we preventing the WW3 with this one", new Date(2024, 6, 28));
+}
 
 renderTodos();
 renderListNames();
