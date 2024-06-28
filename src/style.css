@@ -84,6 +84,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    z-index: 1;
 }
 
 @media (max-width: 850px) {
@@ -126,6 +128,8 @@ body {
 
     position: absolute;
     display: none;
+
+    z-index: 1;
 }
 
 @media (max-width: 780px) {
@@ -209,8 +213,8 @@ body {
 }
 
 .category > .icon {
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     font-size: 1.5rem;
     color: inherit;
 }
@@ -222,7 +226,6 @@ body {
 
 #new-entry {
     cursor: pointer;
-    margin-top: auto;
     border: none;
     background-color: var(--light-green);
     color: var(--green);
@@ -386,6 +389,8 @@ body {
     visibility: hidden;
     opacity: 0;
     transition: 500ms;
+
+    z-index: 1;
 }
 
 #blur-overlay .tutturu {
@@ -417,6 +422,8 @@ body {
     display: flex;
 
     overflow: hidden;
+
+    z-index: 2;
 }
 
 #modal.active {
@@ -496,9 +503,9 @@ body {
 .text-edit {
     padding: 0.25rem;
     resize: none;
-    height: fit-content;
     border: none;
     outline: none;
+    font-size: 0.9rem;
 }
 
 .date-edit {
@@ -518,7 +525,7 @@ input, textarea {
 }
 
 #modal-title {
-    height: 1.75rem;
+    height: 2rem;
 }
 
 #modal-desc {
@@ -552,17 +559,19 @@ input, textarea {
 
 .error-text {
     color: var(--red);
-    font-size: 0.75rem;
+    font-size: 1rem;
     transform: scale(0);
     opacity: 0;
     transition: 200ms;
     height: 0;
+    margin-top: 0;
 }
 
 .error-text.enabled {
     height: 100%;
     transform: scale(1);
     opacity: 1;
+    margin-top: 0.5rem;
 }
 
 #delete-list {
